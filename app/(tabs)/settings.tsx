@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Switch,
-  Platform,
-} from "react-native";
+import Slider from "@react-native-community/slider";
 import { LinearGradient } from "expo-linear-gradient";
 import {
-  Settings as SettingsIcon,
+  Bell,
   Clock,
   Palette,
+  Settings as SettingsIcon,
   Volume2,
-  Bell,
 } from "lucide-react-native";
+import React, { useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useFocusStore } from "@/stores/focus-store";
@@ -27,7 +27,9 @@ const NEON_COLORS = [
   { name: "Purple", value: "#bf00ff" },
   { name: "Orange", value: "#ff6600" },
   { name: "Cyan", value: "#00ffff" },
-];
+] as const;
+
+const SESSIONS_PRESETS = [2, 3, 4, 5];
 
 const SOUNDSCAPES = [
   { name: "None", value: "none" },
@@ -36,7 +38,7 @@ const SOUNDSCAPES = [
   { name: "Ocean", value: "ocean" },
   { name: "City", value: "city" },
   { name: "White Noise", value: "whitenoise" },
-];
+] as const;
 
 const TIME_PRESETS = [
   { name: "15 min", focus: 15 * 60, break: 3 * 60 },
@@ -132,6 +134,110 @@ export default function SettingsScreen() {
                       </Text>
                       <Text style={styles.presetSubtext}>
                         {Math.floor(preset.break / 60)}m break
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {expandedSection === "timer" && (
+              <View style={styles.sectionContent}>
+                {/* ... Quick Presets ... */}
+                <Text style={styles.subsectionTitle}>Custom Durations</Text>
+                <View>
+                  <Text style={styles.sliderLabel}>
+                    Focus: {formatTime(settings.focusDuration)}
+                  </Text>
+                  <Slider
+                    style={{ width: "100%", height: 40 }}
+                    minimumValue={15 * 60}
+                    maximumValue={90 * 60}
+                    step={5 * 60}
+                    value={settings.focusDuration}
+                    onSlidingComplete={(value) =>
+                      updateSettings({ focusDuration: value })
+                    }
+                    minimumTrackTintColor={settings.neonColor}
+                    maximumTrackTintColor="#333"
+                    thumbTintColor={settings.neonColor}
+                  />
+                  <Text style={styles.sliderLabel}>
+                    Break: {formatTime(settings.breakDuration)}
+                  </Text>
+                  <Slider
+                    style={{ width: "100%", height: 40 }}
+                    minimumValue={3 * 60}
+                    maximumValue={30 * 60}
+                    step={1 * 60}
+                    value={settings.breakDuration}
+                    onSlidingComplete={(value) =>
+                      updateSettings({ breakDuration: value })
+                    }
+                    minimumTrackTintColor={settings.neonColor}
+                    maximumTrackTintColor="#333"
+                    thumbTintColor={settings.neonColor}
+                  />
+                </View>
+              </View>
+            )}
+          </TouchableOpacity>
+
+          {/* Long Break Settings */}
+
+          <TouchableOpacity
+            style={styles.section}
+            onPress={() => toggleSection("longBreak")}
+          >
+            <View style={styles.sectionHeader}>
+              <View style={styles.sectionTitleContainer}>
+                <Clock color="#888" size={20} />
+                <Text style={styles.sectionTitle}>Long Break</Text>
+              </View>
+              <Text style={styles.sectionValue}>
+                {settings.sessionsBeforeLongBreak} sessions /{" "}
+                {formatTime(settings.longBreakDuration)}
+              </Text>
+            </View>
+
+            {expandedSection === "longBreak" && (
+              <View style={styles.sectionContent}>
+                <Text style={styles.subsectionTitle}>
+                  Sessions before long break
+                </Text>
+                <View style={styles.presetGrid}>
+                  {SESSIONS_PRESETS.map((preset) => (
+                    <TouchableOpacity
+                      key={preset}
+                      style={[
+                        styles.presetButton,
+                        settings.sessionsBeforeLongBreak === preset && {
+                          borderColor: settings.neonColor,
+                          backgroundColor: `${settings.neonColor}10`,
+                        },
+                      ]}
+                      onPress={() => {
+                        try {
+                          updateSettings({
+                            sessionsBeforeLongBreak: preset,
+                          });
+                        } catch (error) {
+                          console.log(
+                            "Error updating sessions settings:",
+                            error
+                          );
+                        }
+                      }}
+                    >
+                      <Text
+                        style={[
+                          styles.presetText,
+                          settings.sessionsBeforeLongBreak === preset && {
+                            color: settings.neonColor,
+                          },
+                        ]}
+                      >
+                        {preset}
                       </Text>
                     </TouchableOpacity>
                   ))}
@@ -379,6 +485,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#ffffff",
     marginBottom: 4,
+  },
+  sliderLabel: {
+    fontSize: 14,
+    color: "#888",
+    marginBottom: 8,
   },
   presetSubtext: {
     fontSize: 12,

@@ -1,13 +1,14 @@
-import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Dimensions, Platform } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { Play, Pause, RotateCcw } from "lucide-react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useRef } from "react";
+import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useFocusStore } from "@/stores/focus-store";
-import NeonButton from "@/components/NeonButton";
 import CircularProgress from "@/components/CircularProgress";
+import NeonButton from "@/components/NeonButton";
+import { useFocusStore } from "@/stores/focus-store";
+
+import { useSound } from "@/hooks/useSound";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,7 +26,9 @@ export default function FocusScreen() {
     tick,
   } = useFocusStore();
 
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  useSound();
+
+  const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
     try {
@@ -85,7 +88,9 @@ export default function FocusScreen() {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    pauseTimer();
+    if (isActive) {
+      pauseTimer();
+    }
   };
 
   const handleReset = () => {
@@ -106,7 +111,11 @@ export default function FocusScreen() {
       >
         <View style={styles.header}>
           <Text style={styles.sessionType}>
-            {currentSession === "focus" ? "FOCUS TIME" : "BREAK TIME"}
+            {currentSession === "focus"
+              ? "FOCUS TIME"
+              : currentSession === "break"
+              ? "BREAK TIME"
+              : "LONG BREAK"}
           </Text>
           <View
             style={[

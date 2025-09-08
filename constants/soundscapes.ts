@@ -1,12 +1,14 @@
 export const SOUNDSCAPE_URLS = {
   rain: "https://www.soundjay.com/misc/sounds/rain-01.wav",
   forest: "https://www.soundjay.com/ambient/sounds/spring-weather-1.wav",
-  wind: "https://www.soundjay.com/misc/wind-chime-2.wav",
+  ocean: "https://www.soundjay.com/misc/wind-chime-2.wav",
   city: "https://www.soundjay.com/misc/sounds/city-01.wav",
   whitenoise: "https://www.soundjay.com/misc/sounds/white-noise-04.wav",
-};
+} as const;
 
-export const SOUNDSCAPE_DESCRIPTIONS = {
+export type Soundscape = keyof typeof SOUNDSCAPE_URLS;
+
+export const SOUNDSCAPE_DESCRIPTIONS: Record<Soundscape | "none", string> = {
   none: "Complete silence for maximum focus",
   rain: "Gentle rainfall to calm your mind",
   forest: "Peaceful forest ambience",

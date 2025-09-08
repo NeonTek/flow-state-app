@@ -1,10 +1,11 @@
+import { registerForPushNotificationsAsync } from "@/services/notificationService";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect, Component, ReactNode } from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
-import { View, Text, StyleSheet } from "react-native";
+import React, { Component, ReactNode, useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -70,6 +71,8 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   useEffect(() => {
+    registerForPushNotificationsAsync();
+
     const hideSplash = async () => {
       try {
         await SplashScreen.hideAsync();
