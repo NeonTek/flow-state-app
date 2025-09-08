@@ -1,0 +1,5 @@
+adaptive-logo.png
+favicon.png
+icon.png
+splash-icon.png
+https://www.soundjay.com/ambient/sounds/spring-weather-1.mp3
