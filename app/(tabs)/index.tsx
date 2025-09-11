@@ -9,10 +9,13 @@ import NeonButton from "@/components/NeonButton";
 import { useFocusStore } from "@/stores/focus-store";
 
 import { useSound } from "@/hooks/useSound";
+import { useKeepAwake } from "expo-keep-awake";
 
 const { width, height } = Dimensions.get("window");
 
 export default function FocusScreen() {
+  useKeepAwake();
+
   const insets = useSafeAreaInsets();
   const {
     isActive,

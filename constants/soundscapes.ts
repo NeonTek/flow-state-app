@@ -1,9 +1,17 @@
+const rainSound = require("../assets/audio/rain.mp3");
+const forestSound = require("../assets/audio/forest.mp3");
+const oceanSound = require("../assets/audio/ocean.mp3");
+const citySound = require("../assets/audio/city.mp3");
+const whiteNoiseSound = require("../assets/audio/white-noice.mp3");
+const gospel = require("../assets/audio/gospel.mp3");
+
 export const SOUNDSCAPE_URLS = {
-  rain: "https://www.soundjay.com/misc/sounds/rain-01.wav",
-  forest: "https://www.soundjay.com/ambient/sounds/spring-weather-1.wav",
-  ocean: "https://www.soundjay.com/misc/wind-chime-2.wav",
-  city: "https://www.soundjay.com/misc/sounds/city-01.wav",
-  whitenoise: "https://www.soundjay.com/misc/sounds/white-noise-04.wav",
+  rain: rainSound,
+  forest: forestSound,
+  ocean: oceanSound,
+  city: citySound,
+  whitenoise: whiteNoiseSound,
+  gospel: gospel,
 } as const;
 
 export type Soundscape = keyof typeof SOUNDSCAPE_URLS;
@@ -15,4 +23,5 @@ export const SOUNDSCAPE_DESCRIPTIONS: Record<Soundscape | "none", string> = {
   ocean: "Soothing wind chime sounds",
   city: "Distant city hum for urban focus",
   whitenoise: "Pure white noise for concentration",
+  gospel: "Uplifting gospel music to inspire focus",
 };
