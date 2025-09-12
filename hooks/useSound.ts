@@ -15,7 +15,7 @@ export function useSound() {
         } else {
           try {
             const { sound } = await Audio.Sound.createAsync(
-              { uri: SOUNDSCAPE_URLS[settings.soundscape] },
+              SOUNDSCAPE_URLS[settings.soundscape],
               { shouldPlay: true, isLooping: true }
             );
             soundRef.current = sound;
